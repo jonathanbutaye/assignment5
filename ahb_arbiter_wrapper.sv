@@ -19,12 +19,17 @@ module ahb_arbiter_wrapper (
     );
 
     /* hic sunt dracones */
+    // ASSERTION 1
     /* grant can never been given to more than one master */
     /* simple trick to check wether a number has more than one bit set: n & (n - 1) != 0 */
-    
-    //no_multiple_grants: assert ((HGRANTx & (HGRANTx - 1)) == 0) $display("%m pass"); else $info("%m fail");
     no_multiple_grants: assert property ( @(posedge HCLK) (HGRANTx |-> ((HGRANTx & (HGRANTx - 1)) == 0) ));
     
-    
+    // ASSERTION 2
+    /* grant is always given */
+    grant_always_given: assert property ( @(posedge HCLK) (HBUSREQx |-> ##[0:$] HGRANTx) )
+
+    // ASSERTION 3
+    /* grant goes LOW after a ready */
+
 
 endmodule : ahb_arbiter_wrapper
