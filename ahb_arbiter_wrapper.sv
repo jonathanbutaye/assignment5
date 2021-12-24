@@ -23,7 +23,7 @@ module ahb_arbiter_wrapper (
     /* simple trick to check wether a number has more than one bit set: n & (n - 1) != 0 */
     initial 
     begin
-        no_multiple_grants: assert (HGRANTx & (HGRANTx - 1) != 0) $display("%m pass"); else $info("%m fail");
+        no_multiple_grants: assert (HGRANTx && (HGRANTx - 1) != 0) $display("%m pass"); else $info("%m fail");
     end
     
 
