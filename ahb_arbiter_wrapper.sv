@@ -26,7 +26,7 @@ module ahb_arbiter_wrapper (
     
     // ASSERTION 2
     /* grant is always given */
-    grant_always_given: assert property ( @(posedge HCLK) (HBUSREQx |-> ##[0:$] HGRANTx) )
+    grant_always_given: assert property ( @(posedge HCLK) (HBUSREQx |-> ##[0:$] HGRANTx) );
 
     // ASSERTION 3
     /* grant goes LOW after a ready */
