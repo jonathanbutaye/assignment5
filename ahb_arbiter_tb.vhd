@@ -60,7 +60,6 @@ begin
     HREADY <= or_reduce(ready_indiv);
     process
     begin
-        HGRANTx <= '0';
         HRESETn <= '0';
         HBUSREQx <= (others => '0');
         HLOCKx <= (others => '0');
