@@ -50,10 +50,10 @@ module ahb_arbiter_wrapper (
     
     grant_within_16_clkcycles: assert property ( @(posedge HCLK) ($onehot(HBUSREQx) |-> ##[1:16] $onehot(HGRANTx)));
 
-    // ASSERTION 4
+    // ASSERTION 5
     /* I assume that grant is given or will be within 16 clockcycles when there is at least one request */
     // Very similar to assertion 4
-    grant_within_16_clkcycles: assert property ( @(posedge HCLK) ($countones(HBUSREQx) >= 1 |-> ##[0:16] $onehot(HGRANTx)));
+    grant_given: assert property ( @(posedge HCLK) ($countones(HBUSREQx) >= 1 |-> ##[0:16] $onehot(HGRANTx)));
 
 
 
