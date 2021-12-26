@@ -21,12 +21,23 @@ module ahb_arbiter_wrapper (
     /* hic sunt dracones */
     // ASSERTION 1
     /* grant can never been given to more than one master */
+    initial begin
+        no_multiple_grants: assert ($countones(HGRANTx) <= 1) else $error("More than one grant given to masters");
+    end
+    // Bad way that also works
     /* simple trick to check wether a number has more than one bit set: n & (n - 1) != 0 */
-    no_multiple_grants: assert property ( @(posedge HCLK) (HGRANTx |-> ((HGRANTx & (HGRANTx - 1)) == 0) ));
+    //no_multiple_grants: assert property ( @(posedge HCLK) (HGRANTx |-> ((HGRANTx & (HGRANTx - 1)) == 0) ));
     
     // ASSERTION 2
     /* grant is always given */
-    grant_always_given: assert property ( @(posedge HCLK) (HBUSREQx |-> ##[0:$] HGRANTx) );
+    sequence grant_always_seq;
+        @(posedge HCLK) HBUSREQx ##[0:$] HGRANTx;
+    endsequence
+    property grant_always_prop;
+        grant_always_seq;
+    endproperty
+    grant_always_given: assert property(grant_always_prop);
+    //grant_always_given: assert property ( @(posedge HCLK) (HBUSREQx |-> ##[0:$] HGRANTx) );
 
     // ASSERTION 3
     /* grant goes LOW after a ready */
@@ -37,10 +48,10 @@ module ahb_arbiter_wrapper (
     /* It is enough to check if one grant is given instead of first checking wich master is requesting because only one master is requesting */
     /* I used the same trick as in assertion 1 to check if only one bit is set */
     
-    //grant_within_16_clkcycles: assert property ( @(posedge HCLK) (((HBUSREQx & (HBUSREQx - 1)) == 0) |-> ##[1:16] HGRANTx));
+    grant_within_16_clkcycles: assert property ( @(posedge HCLK) ($countones(HBUSREQx) == 1 |-> ##[0:16] $countones(HBUSREQx) == 1));
 
     // ASSERTION 5
-    /* I assume */
+    /* I assume that grant is given or will be within 16 clockcycles when ther is a request*/
 
 
 endmodule : ahb_arbiter_wrapper
