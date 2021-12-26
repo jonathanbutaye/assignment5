@@ -30,6 +30,6 @@ module ahb_arbiter_wrapper (
 
     // ASSERTION 3
     /* grant goes LOW after a ready */
-
+    grant_LOW_after_ready: assert property ( @(posedge HCLK) (HREADY |=> HGRANTx == 0));
 
 endmodule : ahb_arbiter_wrapper
