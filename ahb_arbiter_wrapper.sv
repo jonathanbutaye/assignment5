@@ -53,7 +53,7 @@ module ahb_arbiter_wrapper (
     // ASSERTION 5
     /* I assume that grant is given or will be within 16 clockcycles when there is a request */
     // Very similar to assertion 4
-    grant_given: assert property ( @(posedge HCLK) ($countones(HBUSREQx) >= 1 |-> ##[0:16] $onehot(HGRANT)));
+    grant_given: assert property ( @(posedge HCLK) ($countones(HBUSREQx) >= 1 |-> ##[0:16] $onehot(HGRANTx)));
 
 
 
