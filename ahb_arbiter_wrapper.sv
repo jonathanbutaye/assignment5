@@ -36,7 +36,7 @@ module ahb_arbiter_wrapper (
     /* I assume that grant will be given within 16 clockcycles when there is only one master a high request signal */
     /* It is enough to check if one grant is given instead of first checking wich master is requesting because only one master is requesting */
     /* I used the same trick as in assertion 1 to check if only one bit is set */
-    grant_within_16_clkcycles: assert property ( @(posedge HCLK) (((HBUSREQx && (HBUSREQx - 1)) == 0) |-> ##[1:16] HGRANTx));
+    grant_within_16_clkcycles: assert property ( @(posedge HCLK) (((HBUSREQx & (HBUSREQx - 1)) == 0) |-> ##[1:16] HGRANTx));
 
     // ASSERTION 5
     /* I assume */
