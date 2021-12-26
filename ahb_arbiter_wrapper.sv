@@ -41,7 +41,7 @@ module ahb_arbiter_wrapper (
 
     // ASSERTION 3
     /* grant goes LOW after a ready */
-    grant_LOW_after_ready: assert property ( @(posedge HCLK) (HREADY |=> $fell(HGRANTx) ) );
+    grant_LOW_after_ready: assert property ( @(posedge HCLK) (HREADY |=> HGRANTx == 0));
 
     // ASSERTION 4
     /* I assume that grant will be given within 16 clockcycles when there is only one master a high request signal */
