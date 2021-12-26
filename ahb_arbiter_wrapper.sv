@@ -22,7 +22,7 @@ module ahb_arbiter_wrapper (
     // ASSERTION 1
     /* grant can never been given to more than one master */
     initial begin
-        no_multiple_grants: assert ($countones(HGRANTx) <= 1) else $error("More than one grant given to masters");
+        no_multiple_grants: assert ($onehot0(HGRANTx)) else $error("More than one grant given to masters");
     end
     // Bad way that also works
     /* simple trick to check wether a number has more than one bit set: n & (n - 1) != 0 */
@@ -34,24 +34,27 @@ module ahb_arbiter_wrapper (
         @(posedge HCLK) HBUSREQx ##[0:$] HGRANTx;//, $display("Request: %d , Grant: %d .", HBUSREQx, HGRANTx);
     endsequence
     property grant_always_prop;
-        grant_always_seq, $$display("TEST");
+        grant_always_seq;
     endproperty
     grant_always_given: assert property(grant_always_prop);
     //grant_always_given: assert property ( @(posedge HCLK) (HBUSREQx |-> ##[0:$] HGRANTx) );
 
     // ASSERTION 3
     /* grant goes LOW after a ready */
-    grant_LOW_after_ready: assert property ( @(posedge HCLK) (HREADY |=> HGRANTx == 0));
+    grant_LOW_after_ready: assert property ( @(posedge HCLK) (HREADY |=> $fell(HGRANTx) ) );
 
     // ASSERTION 4
     /* I assume that grant will be given within 16 clockcycles when there is only one master a high request signal */
     /* It is enough to check if one grant is given instead of first checking wich master is requesting because only one master is requesting */
     /* I used the same trick as in assertion 1 to check if only one bit is set */
     
-    grant_within_16_clkcycles: assert property ( @(posedge HCLK) ($countones(HBUSREQx) == 1 |-> ##[0:16] $countones(HBUSREQx) == 1));
+    grant_within_16_clkcycles: assert property ( @(posedge HCLK) ($onehot(HBUSREQx) && $rose(HBUSREQx) |-> ##[1:16] $onehot(HGRANTx)));
 
     // ASSERTION 5
-    /* I assume that grant is given or will be within 16 clockcycles when ther is a request*/
+    /* I assume that grant is given or will be within 16 clockcycles when there is a request */
+    // Very similar to assertion 4
+    grant_given: assert property ( @(posedge HCLK) ($countones(HBUSREQx) >= 1 |-> ##[0:16] $onehot(HGRANT)));
+
 
 
 endmodule : ahb_arbiter_wrapper
