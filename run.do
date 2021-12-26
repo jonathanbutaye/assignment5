@@ -2,6 +2,11 @@ vlib work
 
 vsim -voptargs="+acc" -msgmode both ahb_arbiter_tb
 
+add wave -divider signals
+add wave sim:/ahb_arbiter_tb/HGRANTx
+add wave sim:/ahb_arbiter_tb/HBUSREQx
+add wave sim:/ahb_arbiter_tb/HLOCKx
+
 add wave sim:/ahb_arbiter_tb/HRESETn
 add wave sim:/ahb_arbiter_tb/HCLK
 add wave sim:/ahb_arbiter_tb/HREADY
