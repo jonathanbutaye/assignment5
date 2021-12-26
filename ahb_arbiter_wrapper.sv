@@ -31,10 +31,10 @@ module ahb_arbiter_wrapper (
     // ASSERTION 2
     /* grant is always given */
     sequence grant_always_seq;
-        @(posedge HCLK) HBUSREQx ##[0:$] HGRANTx, $display("Request: %d , Grant: %d .", HBUSREQx, HGRANTx);
+        @(posedge HCLK) HBUSREQx ##[0:$] HGRANTx;//, $display("Request: %d , Grant: %d .", HBUSREQx, HGRANTx);
     endsequence
     property grant_always_prop;
-        grant_always_seq;
+        grant_always_seq, $$display("TEST");
     endproperty
     grant_always_given: assert property(grant_always_prop);
     //grant_always_given: assert property ( @(posedge HCLK) (HBUSREQx |-> ##[0:$] HGRANTx) );
