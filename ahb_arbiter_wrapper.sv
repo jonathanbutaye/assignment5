@@ -1,4 +1,4 @@
-`timescale 1ns/1ns 
+`timescale 10ns/1ns 
 
 module ahb_arbiter_wrapper (
     input logic HCLK,
