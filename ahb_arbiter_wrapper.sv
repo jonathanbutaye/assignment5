@@ -31,7 +31,7 @@ module ahb_arbiter_wrapper (
     // ASSERTION 2
     /* grant is always given */
     sequence grant_always_seq;
-        @(posedge HCLK) HBUSREQx ##[1:$] HGRANTx;//, $display("Request: %d , Grant: %d .", HBUSREQx, HGRANTx);
+        @(posedge HCLK) $countones(HBUSREQx) > 0 ##[0:$] $onehot(HGRANTx);
     endsequence
     property grant_always_prop;
         grant_always_seq;
@@ -55,6 +55,8 @@ module ahb_arbiter_wrapper (
     // Very similar to assertion 4
     grant_given: assert property ( @(posedge HCLK) ($countones(HBUSREQx) >= 1 |-> ##[0:16] $onehot(HGRANTx)));
 
-
+    // ASSERTION 6
+    /* I assume that there must be at least one request and the grant signal must be high when the ready signal rises */
+    request_when_ready: assert property ( @(posedge HCLK) (HREADY |-> $countones(HBUSREQx)>=1 && $onehot(HGRANTx)));
 
 endmodule : ahb_arbiter_wrapper
