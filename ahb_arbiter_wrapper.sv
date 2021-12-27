@@ -30,14 +30,17 @@ module ahb_arbiter_wrapper (
     
     // ASSERTION 2
     /* grant is always given */
+    grant_always_given: assert property ( @(posedge HCLK) (HBUSREQx |-> ##[0:$] HGRANTx) );
+    //other implementation that doesn't work
+    /*
     sequence grant_always_seq;
-        @(posedge HCLK) HBUSREQx ##[0:$] HGRANTx;
+        @(posedge HCLK) ($countones(HBUSREQx) > 0) ##[0:$] $onehot(HGRANTx);
     endsequence
     property grant_always_prop;
         grant_always_seq;
     endproperty
     grant_always_given: assert property(grant_always_prop);
-    //grant_always_given: assert property ( @(posedge HCLK) (HBUSREQx |-> ##[0:$] HGRANTx) );
+    */
 
     // ASSERTION 3
     /* grant goes LOW after a ready */
