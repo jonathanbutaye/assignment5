@@ -30,7 +30,14 @@ module ahb_arbiter_wrapper (
     
     // ASSERTION 2
     /* grant is always given */
-    grant_always_given: assert property ( @(posedge HCLK) (HBUSREQx |-> ##[0:$] HGRANTx) );
+    for (genvar i=0; i<16; i++)
+        grant_always_given: assert property ( @(posedge HCLK) (HBUSREQx[i] |-> ##[0:$] HGRANTx) );
+    
+    // Between these lines is draft
+    //------------------------------------------------------------------------------------------------------------
+    // This doesn't take in account the different grant lines and doesn't fail in the simulator
+    //grant_always_given: assert property ( @(posedge HCLK) (HBUSREQx |-> ##[0:$] HGRANTx) );
+    
     //other implementation that doesn't work
     /*
     sequence grant_always_seq;
@@ -41,6 +48,7 @@ module ahb_arbiter_wrapper (
     endproperty
     grant_always_given: assert property(grant_always_prop);
     */
+    //------------------------------------------------------------------------------------------------------------
 
     // ASSERTION 3
     /* grant goes LOW after a ready */
