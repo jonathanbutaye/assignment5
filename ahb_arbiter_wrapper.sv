@@ -31,7 +31,7 @@ module ahb_arbiter_wrapper (
     // ASSERTION 2
     /* grant is always given */
     for (genvar i=0; i<16; i++)
-        grant_always_given: assert property ( @(posedge HCLK) (s_eventually HBUSREQx[i] |-> ##[0:$] HGRANTx[i]) );
+        grant_always_given: assert property ( @(posedge HCLK) (HBUSREQx[i] |-> strong(##[0:$] HGRANTx[i]) ) );
     
     // Between these lines is draft
     //------------------------------------------------------------------------------------------------------------
